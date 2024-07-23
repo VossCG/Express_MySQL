@@ -3,6 +3,7 @@ const cors = require("cors")
 const express = require('express')
 const sequelize = require('./src/config/database');
 const userRouter = require('./src/routes/user')
+const itemRouter = require("./src/routes/item")
 const productRouter = require('./src/routes/product')
 const app = express()
 
@@ -19,6 +20,7 @@ sequelize.sync()
     });
 
 app.use('/user', userRouter)
+app.use("/item", itemRouter)
 app.use('/product', productRouter)
 
 app.listen(process.env.PORT)
