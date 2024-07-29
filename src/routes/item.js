@@ -14,13 +14,50 @@ router.post('/', async (req, res) => {
 router.get('/', async (req, res) => {
     try {
         const result = await Item.findAll({
-            attributes: ['id', 'name', 'amount']
+            attributes: ['id', 'name', 'amount'],
+            order: [['amount', 'DESC']]
         });
         res.status(200).json(result);
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 });
+
+router.get('/total-amount', async (req, res) => {
+    try {
+        const result = await Item.sum('amount');
+        res.status(200).json({ totalAmount: result });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+
+router.get('/paginated', async (req, res) => {
+    try {
+        const page = parseInt(req.query.page) || 1;
+        const limit = 10;
+        const offset = (page - 1) * limit;
+
+        const { count, rows } = await Item.findAndCountAll({
+            attributes: ['id', 'name', 'amount'],
+            limit,
+            offset,
+            order: [['id', 'ASC']]
+        });
+
+        const totalPages = Math.ceil(count / limit);
+
+        res.status(200).json({
+            currentPage: page,
+            totalPages: totalPages,
+            items: rows,
+        });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
 
 router.put("/:id", async (req, res) => {
     try {
