@@ -1,8 +1,9 @@
 require("dotenv").config()
 const cors = require("cors")
 const express = require('express')
-const sequelize = require('./src/config/database');
+const sequelize = require('./src/database');
 const userRouter = require('./src/routes/user')
+const testRouter = require("./src/routes/Test")
 const itemRouter = require("./src/routes/item")
 const productRouter = require('./src/routes/product')
 const app = express()
@@ -28,6 +29,7 @@ sequelize.authenticate()
 
 app.use('/user', userRouter)
 app.use("/item", itemRouter)
+app.use("/test", testRouter)
 app.use('/product', productRouter)
 
 app.listen(process.env.PORT)
